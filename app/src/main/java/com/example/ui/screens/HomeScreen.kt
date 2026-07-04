@@ -20,12 +20,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.model.Note
-import com.example.model.sampleNotes
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.data.NoteEntity
+import com.example.ui.viewmodel.StudyMartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onNoteClick: (String) -> Unit) {
+fun HomeScreen(viewModel: StudyMartViewModel, onNoteClick: (String) -> Unit) {
+    val trendingNotes by viewModel.trendingNotes.collectAsStateWithLifecycle()
+    val recommendedNotes by viewModel.recommendedNotes.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -87,8 +92,8 @@ fun HomeScreen(onNoteClick: (String) -> Unit) {
                 )
             }
 
-            val trendingNotes = sampleNotes.filter { it.isTrending }
-            items(trendingNotes) { note ->
+            val currentTrendingNotes = trendingNotes
+            items(currentTrendingNotes) { note ->
                 NoteCard(note = note, onClick = { onNoteClick(note.id) })
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -101,8 +106,8 @@ fun HomeScreen(onNoteClick: (String) -> Unit) {
                 )
             }
 
-            val recommendedNotes = sampleNotes.filter { it.isRecommended }
-            items(recommendedNotes) { note ->
+            val currentRecommendedNotes = recommendedNotes
+            items(currentRecommendedNotes) { note ->
                 NoteCard(note = note, onClick = { onNoteClick(note.id) })
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -111,7 +116,7 @@ fun HomeScreen(onNoteClick: (String) -> Unit) {
 }
 
 @Composable
-fun NoteCard(note: Note, onClick: () -> Unit) {
+fun NoteCard(note: NoteEntity, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

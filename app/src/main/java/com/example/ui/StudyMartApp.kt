@@ -13,8 +13,13 @@ import com.example.ui.screens.LoginScreen
 import com.example.ui.screens.NoteDetailScreen
 import com.example.ui.screens.PaymentVerificationScreen
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ui.viewmodel.AppViewModelProvider
+import com.example.ui.viewmodel.StudyMartViewModel
+
 @Composable
 fun StudyMartApp(modifier: Modifier = Modifier) {
+    val viewModel: StudyMartViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val navController = rememberNavController()
 
     NavHost(
@@ -33,6 +38,7 @@ fun StudyMartApp(modifier: Modifier = Modifier) {
         }
         composable("home") {
             HomeScreen(
+                viewModel = viewModel,
                 onNoteClick = { noteId ->
                     navController.navigate("note_detail/$noteId")
                 }
@@ -44,6 +50,7 @@ fun StudyMartApp(modifier: Modifier = Modifier) {
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
             NoteDetailScreen(
+                viewModel = viewModel,
                 noteId = noteId,
                 onBack = { navController.popBackStack() },
                 onBuyClick = { id ->
@@ -57,6 +64,7 @@ fun StudyMartApp(modifier: Modifier = Modifier) {
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
             PaymentVerificationScreen(
+                viewModel = viewModel,
                 noteId = noteId,
                 onBack = { navController.popBackStack() },
                 onPaymentSubmitted = {

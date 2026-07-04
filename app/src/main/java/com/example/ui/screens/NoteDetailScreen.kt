@@ -17,14 +17,17 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.model.sampleNotes
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.ui.viewmodel.StudyMartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) -> Unit) {
-    val note = sampleNotes.find { it.id == noteId }
+fun NoteDetailScreen(viewModel: StudyMartViewModel, noteId: String, onBack: () -> Unit, onBuyClick: (String) -> Unit) {
+    val note by viewModel.getNote(noteId).collectAsStateWithLifecycle()
+    val currentNote = note
 
-    if (note == null) {
+    if (currentNote == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Note not found")
         }
@@ -57,14 +60,14 @@ fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) ->
                     Column {
                         Text("Total Price", style = MaterialTheme.typography.bodySmall)
                         Text(
-                            "₹${note.price}",
+                            "₹${currentNote.price}",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
                     Button(
-                        onClick = { onBuyClick(note.id) },
+                        onClick = { onBuyClick(currentNote.id) },
                         modifier = Modifier
                             .height(50.dp)
                             .testTag("buy_now_button"),
@@ -83,7 +86,7 @@ fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) ->
                 .padding(padding)
         ) {
             AsyncImage(
-                model = note.coverImageUrl,
+                model = currentNote.coverImageUrl,
                 contentDescription = "Cover Image",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,7 +96,7 @@ fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) ->
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = note.title,
+                    text = currentNote.title,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -103,7 +106,7 @@ fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) ->
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "By ${note.creatorName}",
+                        text = "By ${currentNote.creatorName}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -116,7 +119,7 @@ fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) ->
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${note.rating} (${note.reviews} reviews)",
+                            text = "${currentNote.rating} (${currentNote.reviews} reviews)",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -133,7 +136,7 @@ fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) ->
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = note.description,
+                    text = currentNote.description,
                     style = MaterialTheme.typography.bodyLarge,
                     lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.2
                 )
@@ -151,8 +154,8 @@ fun NoteDetailScreen(noteId: String, onBack: () -> Unit, onBuyClick: (String) ->
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        DetailItem("Subject", note.subject)
-                        DetailItem("Exam Type", note.examType)
+                        DetailItem("Subject", currentNote.subject)
+                        DetailItem("Exam Type", currentNote.examType)
                     }
                     Column {
                         DetailItem("Pages", "45 Pages")

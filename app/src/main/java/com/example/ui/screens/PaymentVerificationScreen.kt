@@ -16,12 +16,14 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.model.sampleNotes
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.ui.viewmodel.StudyMartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PaymentVerificationScreen(noteId: String, onBack: () -> Unit, onPaymentSubmitted: () -> Unit) {
-    val note = sampleNotes.find { it.id == noteId }
+fun PaymentVerificationScreen(viewModel: StudyMartViewModel, noteId: String, onBack: () -> Unit, onPaymentSubmitted: () -> Unit) {
+    val note by viewModel.getNote(noteId).collectAsStateWithLifecycle()
     var utrNumber by remember { mutableStateOf("") }
     
     // Generate mock order ID
@@ -47,9 +49,10 @@ fun PaymentVerificationScreen(noteId: String, onBack: () -> Unit, onPaymentSubmi
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (note != null) {
+            val currentNote = note
+            if (currentNote != null) {
                 Text(
-                    text = "Pay ₹${note.price} to ${note.creatorName}",
+                    text = "Pay ₹${currentNote.price} to ${currentNote.creatorName}",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -134,7 +137,13 @@ fun PaymentVerificationScreen(noteId: String, onBack: () -> Unit, onPaymentSubmi
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = onPaymentSubmitted,
+                onClick = {
+                    val currentNote = note
+                    if (utrNumber.isNotBlank() && currentNote != null) {
+                        viewModel.submitPayment(noteId, currentNote.creatorId, currentNote.price, utrNumber)
+                        onPaymentSubmitted()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
