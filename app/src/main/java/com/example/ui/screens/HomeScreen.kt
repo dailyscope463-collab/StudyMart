@@ -27,7 +27,7 @@ import com.example.ui.viewmodel.StudyMartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: StudyMartViewModel, onNoteClick: (String) -> Unit) {
+fun HomeScreen(viewModel: StudyMartViewModel, onNoteClick: (String) -> Unit, onMyNotesClick: () -> Unit = {}) {
     val trendingNotes by viewModel.trendingNotes.collectAsStateWithLifecycle()
     val recommendedNotes by viewModel.recommendedNotes.collectAsStateWithLifecycle()
 
@@ -38,7 +38,12 @@ fun HomeScreen(viewModel: StudyMartViewModel, onNoteClick: (String) -> Unit) {
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                ),
+                actions = {
+                    IconButton(onClick = onMyNotesClick) {
+                        Text("My Notes", modifier = Modifier.padding(end = 8.dp), fontWeight = FontWeight.Bold)
+                    }
+                }
             )
         }
     ) { padding ->

@@ -25,4 +25,5 @@ class StudyMartRepository(private val dao: StudyMartDao) {
     
     fun getOrdersForBuyer(buyerId: String): Flow<List<OrderEntity>> = dao.getOrdersForBuyer(buyerId)
     fun getOrdersForSeller(sellerId: String): Flow<List<OrderEntity>> = dao.getOrdersForSeller(sellerId)
+    fun getPurchasedNotesForBuyer(buyerId: String): Flow<List<NoteEntity>> = dao.getPurchasedNotesForBuyer(buyerId)
 }

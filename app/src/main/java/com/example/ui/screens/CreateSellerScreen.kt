@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import com.example.R
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit, onSignUpClick: () -> Unit, onCreateSellerClick: () -> Unit) {
+fun CreateSellerScreen(onCreateSuccess: () -> Unit, onLoginClick: () -> Unit) {
+    var storeName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -36,31 +37,35 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onSignUpClick: () -> Unit, onCreateS
             Image(
                 painter = painterResource(id = R.drawable.studymart_app_icon_1783183643509),
                 contentDescription = "App Logo",
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier.size(80.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "StudyMart",
+                text = "Seller Account",
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "Buy, Sell & Earn with Study Notes",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            OutlinedTextField(
+                value = storeName,
+                onValueChange = { storeName = it },
+                label = { Text("Store/Seller Name") },
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email") },
                 leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("email_input"),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp)
             )
 
@@ -72,9 +77,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onSignUpClick: () -> Unit, onCreateS
                 label = { Text("Password") },
                 leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("password_input"),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp)
             )
 
@@ -82,36 +85,22 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onSignUpClick: () -> Unit, onCreateS
 
             Button(
                 onClick = {
-                    if (email == "firefree60510@gmail.com" && password == "danger10") {
-                        // Admin login success
-                        onLoginSuccess()
-                    } else {
-                        // Normally you would use FirebaseAuth.getInstance().signInWithEmailAndPassword
-                        // For now we just let any non-empty user in for demo, or mock it:
-                        if (email.isNotEmpty() && password.isNotEmpty()) {
-                            onLoginSuccess()
-                        }
+                    if (email.isNotEmpty() && password.isNotEmpty() && storeName.isNotEmpty()) {
+                        onCreateSuccess()
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
-                    .testTag("login_button"),
+                    .height(50.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Login", fontSize = MaterialTheme.typography.titleMedium.fontSize)
+                Text("Create Account", fontSize = MaterialTheme.typography.titleMedium.fontSize)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextButton(onClick = onSignUpClick) {
-                Text("Don't have an account? Sign Up")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextButton(onClick = onCreateSellerClick) {
-                Text("Create Seller Account", color = MaterialTheme.colorScheme.secondary)
+            TextButton(onClick = onLoginClick) {
+                Text("Already have an account? Login")
             }
         }
     }

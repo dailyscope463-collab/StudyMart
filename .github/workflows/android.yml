@@ -33,4 +33,4 @@ jobs:
       run: touch .env
 
     - name: Build with Gradle
-      run: ./gradlew build --stacktrace
+      run: gradle build --stacktrace

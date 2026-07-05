@@ -51,6 +51,9 @@ interface StudyMartDao {
     @Query("SELECT * FROM orders WHERE sellerId = :sellerId ORDER BY timestamp DESC")
     fun getOrdersForSeller(sellerId: String): Flow<List<OrderEntity>>
 
+    @Query("SELECT notes.* FROM notes INNER JOIN orders ON notes.id = orders.noteId WHERE orders.buyerId = :buyerId")
+    fun getPurchasedNotesForBuyer(buyerId: String): Flow<List<NoteEntity>>
+
     @Query("UPDATE orders SET status = :newStatus WHERE orderId = :orderId")
     suspend fun updateOrderStatus(orderId: String, newStatus: String)
 }

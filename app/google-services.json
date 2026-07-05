@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "69952097868",
+    "project_id": "notes-app-c8fad",
+    "storage_bucket": "notes-app-c8fad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69952097868:android:89bf6fcb0196b5bab72ee9",
+        "android_client_info": {
+          "package_name": "com.aistudio.studymart.rznxpl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69952097868-eftlpofb3hcoh9qrsn5gbufc6t0rcqki.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJwgZIjIjp_QJeCWSMOCTbrOwDvGfPGGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69952097868-eftlpofb3hcoh9qrsn5gbufc6t0rcqki.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

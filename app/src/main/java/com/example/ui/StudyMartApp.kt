@@ -10,8 +10,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.LoginScreen
+import com.example.ui.screens.SignUpScreen
+import com.example.ui.screens.CreateSellerScreen
 import com.example.ui.screens.NoteDetailScreen
 import com.example.ui.screens.PaymentVerificationScreen
+import com.example.ui.screens.MyNotesScreen
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.viewmodel.AppViewModelProvider
@@ -33,12 +36,54 @@ fun StudyMartApp(modifier: Modifier = Modifier) {
                     navController.navigate("home") {
                         popUpTo("login") { inclusive = true }
                     }
+                },
+                onSignUpClick = {
+                    navController.navigate("signup")
+                },
+                onCreateSellerClick = {
+                    navController.navigate("create_seller")
+                }
+            )
+        }
+        composable("signup") {
+            SignUpScreen(
+                onSignUpSuccess = {
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                onLoginClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable("create_seller") {
+            CreateSellerScreen(
+                onCreateSuccess = {
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                onLoginClick = {
+                    navController.popBackStack()
                 }
             )
         }
         composable("home") {
             HomeScreen(
                 viewModel = viewModel,
+                onNoteClick = { noteId ->
+                    navController.navigate("note_detail/$noteId")
+                },
+                onMyNotesClick = {
+                    navController.navigate("my_notes")
+                }
+            )
+        }
+        composable("my_notes") {
+            MyNotesScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
                 onNoteClick = { noteId ->
                     navController.navigate("note_detail/$noteId")
                 }
